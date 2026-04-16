@@ -362,12 +362,18 @@
   let saidas = 0;
 
   linhas.forEach(linha => {
-    const [data, tipo, categoria, valor] = linha.split(",");
+    if (!linha.trim()) return;
 
-    const v = parseFloat(valor);
+    const [data, tipo, categoria, valor] = linha
+      .split(",")
+      .map(v => v.trim());
 
-    if (tipo === "Entrada") entradas += v;
-    if (tipo === "Saída") saidas += v;
+    if (!valor) return;
+
+    const v = parseFloat(valor.replace("\r", "").replace(",", "."));
+
+    if (tipo.toLowerCase().includes("entrada")) entradas += v;
+    if (tipo.toLowerCase().includes("sa")) saidas += v;
   });
 
   return {
