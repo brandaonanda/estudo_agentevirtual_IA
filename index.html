@@ -361,19 +361,21 @@
   let entradas = 0;
   let saidas = 0;
 
+  console.log({ entradas, saidas });
+
   linhas.forEach(linha => {
     if (!linha.trim()) return;
 
-    const [data, tipo, categoria, valor] = linha
+    const [data, tipo, categoria, descricao, valor] = linha
       .split(",")
       .map(v => v.trim());
 
     if (!valor) return;
 
-    const v = parseFloat(valor.replace("\r", "").replace(",", "."));
+    const v = parseFloat(valor.replace("\r", ""));
 
     if (tipo.toLowerCase().includes("entrada")) entradas += v;
-    if (tipo.toLowerCase().includes("sa")) saidas += v;
+    if (tipo.toLowerCase().includes("saída") || tipo.toLowerCase().includes("saida")) saidas += Math.abs(v);
   });
 
   return {
