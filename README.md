@@ -70,21 +70,35 @@ A aplicação segue uma arquitetura simples, porém eficiente:
 
 ---
 
-## 🔄 Fluxo da Aplicação
+## 🔄 Fluxo da Aplicação (Arquitetura)
 
 ```mermaid
 flowchart TD
 
-A[Usuario envia mensagem] --> B[Frontend index.html]
-B --> C[Leitura do CSV]
-C --> D[Calculo de entradas, saidas e saldo]
+subgraph Frontend
+A[Usuario envia mensagem]
+B[Interface chat index.html]
+C[Leitura do CSV]
+D[Calculo de entradas e saidas]
+end
 
-D --> E[Envio para backend]
-E --> F[Netlify Function chat.js]
+subgraph Backend
+E[Requisicao HTTP]
+F[Netlify Function chat.js]
+end
 
-F --> G[OpenAI API]
-G --> H[Resposta com base nos dados]
+subgraph IA
+G[OpenAI API]
+H[Resposta baseada nos dados]
+end
 
+A --> B
+B --> C
+C --> D
+D --> E
+E --> F
+F --> G
+G --> H
 H --> F
 F --> B
 B --> I[Resposta exibida]
