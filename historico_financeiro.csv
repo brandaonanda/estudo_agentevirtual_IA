@@ -1,0 +1,67 @@
+data,tipo,categoria,descricao,valor
+2026-03-01,Saída,Alimentação,Supermercado/Restaurante,-60.42
+2026-03-01,Saída,Lazer,Cinema/Bar/Streaming,-47.68
+2026-03-02,Saída,Alimentação,Supermercado/Restaurante,-15.31
+2026-03-02,Saída,Transporte,Uber/Ônibus,-28.0
+2026-03-03,Saída,Alimentação,Supermercado/Restaurante,-53.21
+2026-03-03,Saída,Transporte,Uber/Ônibus,-13.2
+2026-03-03,Saída,Assinaturas,Netflix/Spotify,-39.9
+2026-03-04,Saída,Alimentação,Supermercado/Restaurante,-49.63
+2026-03-05,Entrada,Salário,Salário mensal,3500.0
+2026-03-05,Saída,Alimentação,Supermercado/Restaurante,-39.38
+2026-03-06,Saída,Alimentação,Supermercado/Restaurante,-29.29
+2026-03-06,Entrada,Freelance,Projeto extra,779.96
+2026-03-07,Saída,Alimentação,Supermercado/Restaurante,-66.35
+2026-03-07,Saída,Transporte,Uber/Ônibus,-32.59
+2026-03-07,Saída,Lazer,Cinema/Bar/Streaming,-92.14
+2026-03-08,Saída,Alimentação,Supermercado/Restaurante,-42.24
+2026-03-08,Saída,Transporte,Uber/Ônibus,-36.03
+2026-03-08,Saída,Lazer,Cinema/Bar/Streaming,-99.25
+2026-03-08,Entrada,Freelance,Projeto extra,343.29
+2026-03-09,Saída,Alimentação,Supermercado/Restaurante,-38.4
+2026-03-09,Saída,Transporte,Uber/Ônibus,-23.96
+2026-03-09,Saída,Lazer,Cinema/Bar/Streaming,-36.46
+2026-03-10,Saída,Moradia,Aluguel,-1200.0
+2026-03-10,Saída,Alimentação,Supermercado/Restaurante,-56.39
+2026-03-11,Saída,Alimentação,Supermercado/Restaurante,-41.78
+2026-03-11,Saída,Transporte,Uber/Ônibus,-19.87
+2026-03-12,Saída,Alimentação,Supermercado/Restaurante,-76.59
+2026-03-13,Saída,Alimentação,Supermercado/Restaurante,-37.79
+2026-03-13,Saída,Transporte,Uber/Ônibus,-14.3
+2026-03-13,Entrada,Freelance,Projeto extra,848.94
+2026-03-14,Saída,Alimentação,Supermercado/Restaurante,-59.65
+2026-03-14,Saída,Transporte,Uber/Ônibus,-39.23
+2026-03-14,Saída,Lazer,Cinema/Bar/Streaming,-29.27
+2026-03-15,Saída,Transporte,Uber/Ônibus,-25.5
+2026-03-15,Saída,Lazer,Cinema/Bar/Streaming,-48.51
+2026-03-15,Saída,Assinaturas,Netflix/Spotify,-39.9
+2026-03-16,Saída,Alimentação,Supermercado/Restaurante,-75.81
+2026-03-17,Saída,Alimentação,Supermercado/Restaurante,-73.82
+2026-03-18,Saída,Alimentação,Supermercado/Restaurante,-17.19
+2026-03-18,Saída,Transporte,Uber/Ônibus,-15.96
+2026-03-19,Saída,Transporte,Uber/Ônibus,-30.64
+2026-03-20,Saída,Alimentação,Supermercado/Restaurante,-33.24
+2026-03-20,Saída,Transporte,Uber/Ônibus,-26.45
+2026-03-21,Saída,Lazer,Cinema/Bar/Streaming,-112.18
+2026-03-22,Saída,Alimentação,Supermercado/Restaurante,-49.88
+2026-03-22,Saída,Lazer,Cinema/Bar/Streaming,-46.7
+2026-03-23,Saída,Alimentação,Supermercado/Restaurante,-56.59
+2026-03-23,Saída,Transporte,Uber/Ônibus,-35.3
+2026-03-23,Entrada,Freelance,Projeto extra,1003.62
+2026-03-24,Saída,Alimentação,Supermercado/Restaurante,-57.16
+2026-03-24,Saída,Transporte,Uber/Ônibus,-36.44
+2026-03-24,Saída,Lazer,Cinema/Bar/Streaming,-24.5
+2026-03-25,Saída,Alimentação,Supermercado/Restaurante,-58.31
+2026-03-25,Saída,Transporte,Uber/Ônibus,-13.14
+2026-03-26,Saída,Alimentação,Supermercado/Restaurante,-53.31
+2026-03-27,Saída,Transporte,Uber/Ônibus,-39.26
+2026-03-27,Entrada,Freelance,Projeto extra,740.1
+2026-03-28,Saída,Alimentação,Supermercado/Restaurante,-51.67
+2026-03-28,Saída,Transporte,Uber/Ônibus,-25.33
+2026-03-28,Saída,Lazer,Cinema/Bar/Streaming,-96.8
+2026-03-29,Saída,Alimentação,Supermercado/Restaurante,-25.48
+2026-03-29,Saída,Transporte,Uber/Ônibus,-36.61
+2026-03-29,Saída,Lazer,Cinema/Bar/Streaming,-56.64
+2026-03-30,Saída,Alimentação,Supermercado/Restaurante,-50.97
+2026-03-30,Saída,Transporte,Uber/Ônibus,-31.82
+2026-03-30,Saída,Lazer,Cinema/Bar/Streaming,-114.42

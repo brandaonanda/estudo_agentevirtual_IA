@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Porquinho – Assistente Financeiro</title>
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --white:      #FFFFFF;
+      --pink-light: #FFD6E0;
+      --pink-mid:   #FFAFC5;
+      --pink-soft:  #FFF0F4;
+      --blue-light: #C9E4FF;
+      --blue-mid:   #A0CBFF;
+      --blue-soft:  #EEF6FF;
+      --text-dark:  #3A2A35;
+      --text-mid:   #7A5C6A;
+      --text-light: #B89DAA;
+      --shadow:     rgba(180, 130, 160, 0.18);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'EB Garamond', Georgia, serif;
+      background: linear-gradient(135deg, var(--pink-soft) 0%, var(--white) 45%, var(--blue-soft) 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+
+    /* Decorative blobs */
+    body::before, body::after {
+      content: '';
+      position: fixed;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 0;
+    }
+    body::before {
+      width: 420px; height: 420px;
+      background: radial-gradient(circle, var(--pink-light) 0%, transparent 70%);
+      top: -120px; left: -120px;
+      opacity: 0.55;
+    }
+    body::after {
+      width: 380px; height: 380px;
+      background: radial-gradient(circle, var(--blue-light) 0%, transparent 70%);
+      bottom: -100px; right: -100px;
+      opacity: 0.5;
+    }
+
+    /* ── Chat Window ── */
+    .chat-wrapper {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 480px;
+      display: flex;
+      flex-direction: column;
+      height: 92vh;
+      max-height: 780px;
+      background: var(--white);
+      border-radius: 28px;
+      box-shadow: 0 8px 48px var(--shadow), 0 2px 12px rgba(180,130,160,0.10);
+      overflow: hidden;
+    }
+
+    /* ── Header ── */
+    .chat-header {
+      background: linear-gradient(120deg, var(--pink-mid) 0%, var(--blue-mid) 100%);
+      padding: 18px 24px 16px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-shrink: 0;
+    }
+
+    .avatar {
+      width: 52px; height: 52px;
+      border-radius: 50%;
+      background: var(--white);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 28px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.10);
+      flex-shrink: 0;
+      animation: float 3.4s ease-in-out infinite;
+    }
+    @keyframes float {
+      0%,100% { transform: translateY(0); }
+      50%      { transform: translateY(-5px); }
+    }
+
+    .header-info { flex: 1; }
+    .header-name {
+      font-size: 1.22rem;
+      font-weight: 600;
+      color: var(--white);
+      line-height: 1.2;
+      letter-spacing: 0.01em;
+    }
+    .header-status {
+      font-size: 0.82rem;
+      color: rgba(255,255,255,0.82);
+      font-style: italic;
+      margin-top: 2px;
+    }
+
+    .status-dot {
+      width: 9px; height: 9px;
+      background: #b4f0c0;
+      border-radius: 50%;
+      display: inline-block;
+      margin-right: 5px;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%,100% { opacity: 1; }
+      50%      { opacity: 0.45; }
+    }
+
+    /* ── Messages Area ── */
+    .chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 24px 20px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      scroll-behavior: smooth;
+    }
+    .chat-messages::-webkit-scrollbar { width: 5px; }
+    .chat-messages::-webkit-scrollbar-track { background: transparent; }
+    .chat-messages::-webkit-scrollbar-thumb { background: var(--pink-light); border-radius: 10px; }
+
+    /* ── Bubbles ── */
+    .message { display: flex; gap: 10px; align-items: flex-end; }
+    .message.bot  { flex-direction: row; }
+    .message.user { flex-direction: row-reverse; }
+
+    .bubble-avatar {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--pink-mid), var(--blue-mid));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 17px;
+      flex-shrink: 0;
+    }
+
+    .bubble {
+      max-width: 78%;
+      padding: 12px 16px;
+      border-radius: 20px;
+      font-size: 1rem;
+      line-height: 1.55;
+      color: var(--text-dark);
+      animation: popIn 0.28s cubic-bezier(.34,1.56,.64,1) both;
+    }
+    @keyframes popIn {
+      from { opacity: 0; transform: scale(0.88) translateY(8px); }
+      to   { opacity: 1; transform: scale(1)    translateY(0);   }
+    }
+
+    .message.bot  .bubble {
+      background: var(--pink-soft);
+      border-bottom-left-radius: 6px;
+      box-shadow: 0 2px 8px rgba(220,160,185,0.13);
+    }
+    .message.user .bubble {
+      background: var(--blue-soft);
+      border-bottom-right-radius: 6px;
+      box-shadow: 0 2px 8px rgba(100,170,230,0.13);
+    }
+
+    .bubble em { font-style: italic; color: var(--text-mid); }
+    .bubble strong { font-weight: 600; }
+
+    /* timestamp */
+    .bubble-time {
+      font-size: 0.72rem;
+      color: var(--text-light);
+      margin-top: 4px;
+      font-style: italic;
+    }
+    .message.bot  .bubble-time { text-align: left;  padding-left: 42px; }
+    .message.user .bubble-time { text-align: right; padding-right: 42px; }
+
+    /* ── Typing indicator ── */
+    .typing-indicator {
+      display: flex; gap: 5px;
+      align-items: center;
+      padding: 10px 14px;
+    }
+    .typing-indicator span {
+      width: 7px; height: 7px;
+      background: var(--pink-mid);
+      border-radius: 50%;
+      animation: bounce 1.2s infinite;
+    }
+    .typing-indicator span:nth-child(2) { animation-delay: 0.2s; background: var(--blue-mid); }
+    .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes bounce {
+      0%,60%,100% { transform: translateY(0); }
+      30%          { transform: translateY(-6px); }
+    }
+
+    /* ── Quick replies ── */
+    .quick-replies {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 0 20px 4px;
+    }
+    .quick-chip {
+      font-family: 'EB Garamond', serif;
+      font-size: 0.88rem;
+      padding: 6px 14px;
+      border-radius: 20px;
+      border: 1.5px solid var(--pink-mid);
+      background: var(--white);
+      color: var(--text-mid);
+      cursor: pointer;
+      transition: background 0.18s, color 0.18s, transform 0.12s;
+    }
+    .quick-chip:hover {
+      background: var(--pink-light);
+      color: var(--text-dark);
+      transform: translateY(-2px);
+    }
+
+    /* ── Input Area ── */
+    .chat-input-area {
+      padding: 14px 16px 18px;
+      border-top: 1px solid rgba(220, 160, 185, 0.18);
+      background: var(--white);
+      flex-shrink: 0;
+    }
+
+    .input-row {
+      display: flex;
+      gap: 10px;
+      align-items: flex-end;
+    }
+
+    .chat-input {
+      flex: 1;
+      font-family: 'EB Garamond', serif;
+      font-size: 1rem;
+      color: var(--text-dark);
+      background: var(--pink-soft);
+      border: 1.5px solid transparent;
+      border-radius: 20px;
+      padding: 11px 16px;
+      resize: none;
+      outline: none;
+      line-height: 1.45;
+      transition: border-color 0.2s, background 0.2s;
+      max-height: 120px;
+      overflow-y: auto;
+    }
+    .chat-input::placeholder { color: var(--text-light); font-style: italic; }
+    .chat-input:focus {
+      border-color: var(--pink-mid);
+      background: var(--white);
+    }
+
+    .send-btn {
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      border: none;
+      cursor: pointer;
+      background: linear-gradient(135deg, var(--pink-mid), var(--blue-mid));
+      color: white;
+      font-size: 1.2rem;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      transition: transform 0.15s, box-shadow 0.15s;
+      box-shadow: 0 2px 10px var(--shadow);
+    }
+    .send-btn:hover  { transform: scale(1.08); box-shadow: 0 4px 16px var(--shadow); }
+    .send-btn:active { transform: scale(0.96); }
+
+    /* file attach hint */
+    .attach-hint {
+      font-size: 0.75rem;
+      color: var(--text-light);
+      font-style: italic;
+      text-align: center;
+      margin-top: 8px;
+    }
+    .attach-hint a { color: var(--pink-mid); text-decoration: none; }
+    .attach-hint a:hover { text-decoration: underline; }
+
+    /* hidden file input */
+    #csv-input { display: none; }
+  </style>
+</head>
+<body>
+
+<div class="chat-wrapper">
+
+  <!-- Header -->
+  <header class="chat-header">
+    <div class="avatar">🐷</div>
+    <div class="header-info">
+      <div class="header-name">Porquinho</div>
+      <div class="header-status">
+        <span class="status-dot"></span>assistente financeiro virtual
+      </div>
+    </div>
+  </header>
+
+  <!-- Messages -->
+  <div class="chat-messages" id="chatMessages">
+    <!-- initial bot message rendered by JS -->
+  </div>
+
+  <!-- Quick replies -->
+  <div class="quick-replies" id="quickReplies">
+    <button class="quick-chip" onclick="sendQuick(this)">💰 Ver meu saldo</button>
+    <button class="quick-chip" onclick="sendQuick(this)">📊 Analisar gastos</button>
+    <button class="quick-chip" onclick="sendQuick(this)">🎯 Criar meta</button>
+    <button class="quick-chip" onclick="sendQuick(this)">💡 Dicas de economia</button>
+  </div>
+
+  <!-- Input -->
+  <div class="chat-input-area">
+    <div class="input-row">
+      <textarea
+        id="chatInput"
+        class="chat-input"
+        placeholder="Digite sua mensagem…"
+        rows="1"
+        onkeydown="handleKey(event)"
+        oninput="autoResize(this)"
+      ></textarea>
+      <button class="send-btn" onclick="sendMessage()" title="Enviar">
+        &#10148;
+      </button>
+    </div>
+    <div class="attach-hint">
+      Quer analisar seus dados?
+      <a href="#" onclick="document.getElementById('csv-input').click(); return false;">Anexe um CSV 📎</a>
+    </div>
+    <input type="file" id="csv-input" accept=".csv" onchange="handleCSV(event)" />
+  </div>
+
+</div>
+
+<script>
+
+  async function carregarCSV() {
+  const res = await fetch("historico_financeiro.csv");
+  const texto = await res.text();
+
+  const linhas = texto.split("\n").slice(1);
+
+  let entradas = 0;
+  let saidas = 0;
+
+  linhas.forEach(linha => {
+    const [data, tipo, categoria, valor] = linha.split(",");
+
+    const v = parseFloat(valor);
+
+    if (tipo === "Entrada") entradas += v;
+    if (tipo === "Saída") saidas += v;
+  });
+
+  return {
+    entradas,
+    saidas,
+    saldo: entradas - saidas
+  };
+}
+
+  // ── Helpers ──────────────────────────────────────────────────
+  const messagesEl = document.getElementById('chatMessages');
+
+  function getTime() {
+    return new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+  }
+
+  function scrollBottom() {
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+  }
+
+  function appendMessage(text, role = 'bot', delay = 0) {
+    return new Promise(resolve => {
+      setTimeout(() => {
+        const wrapper = document.createElement('div');
+        wrapper.className = `message ${role}`;
+
+        const avatarHTML = role === 'bot'
+          ? `<div class="bubble-avatar">🐷</div>`
+          : '';
+
+        wrapper.innerHTML = `
+          ${avatarHTML}
+          <div>
+            <div class="bubble">${text}</div>
+            <div class="bubble-time">${getTime()}</div>
+          </div>
+        `;
+        messagesEl.appendChild(wrapper);
+        scrollBottom();
+        resolve();
+      }, delay);
+    });
+  }
+
+  function showTyping() {
+    const el = document.createElement('div');
+    el.className = 'message bot';
+    el.id = 'typingIndicator';
+    el.innerHTML = `
+      <div class="bubble-avatar">🐷</div>
+      <div class="bubble" style="padding:10px 14px;">
+        <div class="typing-indicator">
+          <span></span><span></span><span></span>
+        </div>
+      </div>`;
+    messagesEl.appendChild(el);
+    scrollBottom();
+  }
+
+  function hideTyping() {
+    const el = document.getElementById('typingIndicator');
+    if (el) el.remove();
+  }
+
+  // ── Welcome message ──────────────────────────────────────────
+  (async () => {
+    await appendMessage('Olá, Pessoa! 👋', 'bot', 600);
+    showTyping();
+    await new Promise(r => setTimeout(r, 1100));
+    hideTyping();
+    await appendMessage('Meu nome é <strong>Porquinho</strong> e sou seu assistente financeiro virtual. 🐷💸', 'bot');
+    showTyping();
+    await new Promise(r => setTimeout(r, 900));
+    hideTyping();
+    await appendMessage('<em>Vamos economizar?</em> ✨', 'bot');
+  })();
+
+  // ── Send message ─────────────────────────────────────────────
+  
+  async function sendMessage() {
+  const input = document.getElementById('chatInput');
+  const text = input.value.trim();
+  if (!text) return;
+
+  input.value = '';
+  autoResize(input);
+
+  await appendMessage(text, 'user');
+
+  showTyping();
+
+  try {
+    const dados = await carregarCSV();
+
+    const res = await fetch("/.netlify/functions/chat", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        message: text,
+        dados: dados
+      })
+    });
+
+    const data = await res.json();
+
+    hideTyping();
+    await appendMessage(data.reply, 'bot');
+
+  } catch (err) {
+    hideTyping();
+    await appendMessage("Erro ao conectar 😢", 'bot');
+    console.error(err);
+  }
+}
+
+
+  function sendQuick(btn) {
+    const text = btn.textContent.replace(/^[^\s]+\s/, ''); // remove emoji
+    document.getElementById('chatInput').value = btn.textContent;
+    sendMessage();
+  }
+
+  function handleKey(e) {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage();
+    }
+  }
+
+  function autoResize(el) {
+    el.style.height = 'auto';
+    el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+  }
+
+  // ── CSV handler ──────────────────────────────────────────────
+  async function handleCSV(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    await appendMessage(`📎 Arquivo recebido: <strong>${file.name}</strong>`, 'user');
+
+    // ── TODO: integrar leitura de CSV + IA aqui ──
+    // Exemplo:
+    // const csvText = await file.text();
+    // const parsed  = parseCSV(csvText);
+    // const insight = await callAI(`Analise esses dados financeiros: ${JSON.stringify(parsed)}`);
+    // await botReply(insight);
+
+    showTyping();
+    await new Promise(r => setTimeout(r, 1400));
+    hideTyping();
+    await appendMessage(
+      `Recebi seu CSV! 🗂️<br>
+      <em>Assim que a integração com IA estiver ativa, farei uma análise completa dos seus dados financeiros.</em>`,
+      'bot'
+    );
+
+    event.target.value = '';
+  }
+</script>
+</body>
+</html>
